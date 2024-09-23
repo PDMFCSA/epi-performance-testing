@@ -3,7 +3,10 @@
         "tokenEndpoint": "",
         "clientId": "",
         "clientSecret": "",
-        "scope": ""
+        "scope": "",
+        "domain": "",
+        "subdomain": "",
+        "mahUrl": ""
     },
     "backend": {},
     "frontend": {}
