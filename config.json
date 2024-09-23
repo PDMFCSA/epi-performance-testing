@@ -1,5 +1,10 @@
 {
-    "common":{},
+    "common": {
+        "tokenEndpoint": "",
+        "clientId": "",
+        "clientSecret": "",
+        "scope": ""
+    },
     "backend": {},
     "frontend": {}
 }
