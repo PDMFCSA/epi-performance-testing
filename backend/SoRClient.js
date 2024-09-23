@@ -1,4 +1,4 @@
-function SoRClient(domain, subdomain) {
+function SoRClient(domain, subdomain, token) {
     const BASE_URL = require("../config.json").common.mahUrl;
     const _sendRequest = async (endpoint, method, data, responseType) => {
         if (!responseType) {
@@ -12,7 +12,7 @@ function SoRClient(domain, subdomain) {
         endpoint += `domain=${encodeURIComponent(domain)}&subdomain=${encodeURIComponent(subdomain)}`;
 
         if (method === 'GET') {
-            let response = await fetch(endpoint, {method});
+            let response = await fetch(endpoint, {method, headers:{Authorization: `Bearer ${token}`}});
             if (response.status >= 400) {
                 let reason = await response.text();
                 throw {code: response.status, reason}
