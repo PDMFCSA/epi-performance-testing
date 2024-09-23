@@ -1,2 +1,2 @@
-# epi-perfromance-testing
-epi-perfromance-testing
+# epi-performance-testing
+epi-performance-testing
