@@ -27,7 +27,7 @@ function SoRClient(domain, subdomain, token) {
             if (method !== 'DELETE' && data) {
                 body = data ? JSON.stringify(data) : undefined;
             }
-            let response = await fetch(endpoint, {method, body});
+            let response = await fetch(endpoint, {method, body, headers:{Authorization: `Bearer ${token}`}});
             if (response.status >= 400) {
                 let reason = await response.text();
                 throw {code: response.status, reason}
