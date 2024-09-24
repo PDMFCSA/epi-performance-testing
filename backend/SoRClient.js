@@ -13,58 +13,58 @@ function SoRClient(domain, subdomain, token) {
         endpoint += `domain=${encodeURIComponent(domain)}&subdomain=${encodeURIComponent(subdomain)}`;
 
         if (method === 'GET') {
-            let response = await fetch(endpoint, {method, headers:{Authorization: `Bearer ${token}`}});
+            let response = await fetch(endpoint, {method, headers: {Authorization: `Bearer ${token}`}});
             if (response.status >= 400) {
                 let reason = await response.text();
                 throw {code: response.status, reason}
             }
             if (responseType === "json") {
-                return response.json();
+                return await response.json();
             } else {
-                return response.text();
+                return await response.text();
             }
         } else {
             let body;
             if (method !== 'DELETE' && data) {
                 body = data ? JSON.stringify(data) : undefined;
             }
-            let response = await fetch(endpoint, {method, body, headers:{Authorization: `Bearer ${token}`}});
+            let response = await fetch(endpoint, {method, body, headers: {Authorization: `Bearer ${token}`}});
             if (response.status >= 400) {
                 let reason = await response.text();
                 throw {code: response.status, reason}
             }
 
-            return response.text();
+            return await response.text();
         }
     };
 
 
     this.addProduct = async (gtin, productMessage) => {
-        await _sendRequest(`${BASE_URL}/product/${gtin}`, 'POST', productMessage);
+        return await _sendRequest(`${BASE_URL}/product/${gtin}`, 'POST', productMessage);
     };
 
     this.updateProduct = async (gtin, productMessage) => {
-        await _sendRequest(`${BASE_URL}/product/${gtin}`, 'PUT', productMessage);
+        return await _sendRequest(`${BASE_URL}/product/${gtin}`, 'PUT', productMessage);
     };
 
     this.getProductMetadata = async (gtin) => {
-        await _sendRequest(`${BASE_URL}/product/${gtin}`, 'GET');
+        return await _sendRequest(`${BASE_URL}/product/${gtin}`, 'GET');
     };
 
     this.addBatch = async (gtin, batchNumber, batchMessage) => {
-        await _sendRequest(`${BASE_URL}/batch/${gtin}/${encodeURIComponent(batchNumber)}`, 'POST', batchMessage);
+        return await _sendRequest(`${BASE_URL}/batch/${gtin}/${encodeURIComponent(batchNumber)}`, 'POST', batchMessage);
     };
 
     this.addAuditLog = async (logType, auditMessage) => {
-        await _sendRequest(`${BASE_URL}/audit/${logType}`, 'POST', auditMessage);
+        return await _sendRequest(`${BASE_URL}/audit/${logType}`, 'POST', auditMessage);
     }
 
     this.updateBatch = async (gtin, batchNumber, batchMessage) => {
-        await _sendRequest(`${BASE_URL}/batch/${gtin}/${encodeURIComponent(batchNumber)}`, 'PUT', batchMessage);
+        return await _sendRequest(`${BASE_URL}/batch/${gtin}/${encodeURIComponent(batchNumber)}`, 'PUT', batchMessage);
     };
 
     this.getBatchMetadata = async (gtin, batchNumber) => {
-        await _sendRequest(`${BASE_URL}/batch/${gtin}/${encodeURIComponent(batchNumber)}`, 'GET');
+        return await _sendRequest(`${BASE_URL}/batch/${gtin}/${encodeURIComponent(batchNumber)}`, 'GET');
     };
 
     this.getProductEPIs = async (gtin, language, epiType, dsuVersion) => {
@@ -73,7 +73,7 @@ function SoRClient(domain, subdomain, token) {
             url = `${url}?version=${dsuVersion}`;
         }
 
-        await _sendRequest(url, 'GET');
+        return await _sendRequest(url, 'GET');
     }
 
     this.getBatchEPIs = async (gtin, batchNumber, language, epiType, dsuVersion) => {
@@ -82,7 +82,7 @@ function SoRClient(domain, subdomain, token) {
             url = `${url}?version=${dsuVersion}`;
         }
 
-        await _sendRequest(url, 'GET');
+        return await _sendRequest(url, 'GET');
     }
 
     this.addProductEPI = async (gtin, language, epiType, epiMessage) => {
@@ -90,7 +90,7 @@ function SoRClient(domain, subdomain, token) {
     };
 
     this.addBatchEPI = async (gtin, batchNumber, language, epiType, epiMessage) => {
-        await _sendRequest(`${BASE_URL}/epi/${gtin}/${encodeURIComponent(batchNumber)}/${language}/${epiType}`, 'POST', epiMessage);
+        return await _sendRequest(`${BASE_URL}/epi/${gtin}/${encodeURIComponent(batchNumber)}/${language}/${epiType}`, 'POST', epiMessage);
     };
 
     this.updateProductEPI = async (gtin, language, epiType, epiMessage) => {
@@ -98,7 +98,7 @@ function SoRClient(domain, subdomain, token) {
     }
 
     this.updateBatchEPI = async (gtin, batchNumber, language, epiType, epiMessage) => {
-        await _sendRequest(`${BASE_URL}/epi/${gtin}/${encodeURIComponent(batchNumber)}/${language}/${epiType}`, 'PUT', epiMessage);
+        return await _sendRequest(`${BASE_URL}/epi/${gtin}/${encodeURIComponent(batchNumber)}/${language}/${epiType}`, 'PUT', epiMessage);
     }
 
     this.deleteProductEPI = async (gtin, language, epiType) => {
@@ -106,22 +106,22 @@ function SoRClient(domain, subdomain, token) {
     };
 
     this.deleteBatchEPI = async (gtin, batchNumber, language, epiType) => {
-        await _sendRequest(`${BASE_URL}/epi/${gtin}/${encodeURIComponent(batchNumber)}/${language}/${epiType}`, 'DELETE');
+        return await _sendRequest(`${BASE_URL}/epi/${gtin}/${encodeURIComponent(batchNumber)}/${language}/${epiType}`, 'DELETE');
     };
 
     this.listProductLangs = async (gtin, epiType) => {
-        await _sendRequest(`${BASE_URL}/listProductLangs/${gtin}/${epiType}`, 'GET');
+        return await _sendRequest(`${BASE_URL}/listProductLangs/${gtin}/${epiType}`, 'GET');
     }
 
     this.listBatchLangs = async (gtin, batchNumber, epiType) => {
-        await _sendRequest(`${BASE_URL}/listBatchLangs/${gtin}/${encodeURIComponent(batchNumber)}/${epiType}`, 'GET');
+        return await _sendRequest(`${BASE_URL}/listBatchLangs/${gtin}/${encodeURIComponent(batchNumber)}/${epiType}`, 'GET');
     }
 
     const processParametersAndSendRequest = async (baseURL, endpoint, start, number, query, sort) => {
         if (!query) {
             query = "__timestamp > 0";
         }
-        let url = `${baseURL}/${endpoint}?query=${query}`;
+        let url = `${baseURL}/${endpoint}?query=${encodeURIComponent(query)}`;
         if (typeof start !== 'undefined') {
             url += `&start=${start}`;
         }
@@ -131,15 +131,15 @@ function SoRClient(domain, subdomain, token) {
         if (typeof sort !== 'undefined') {
             url += `&sort=${sort}`;
         }
-        await _sendRequest(url, 'GET');
+        return await _sendRequest(url, 'GET');
     }
 
     this.listProducts = async (start, number, query, sort) => {
-        await processParametersAndSendRequest(BASE_URL, 'listProducts', start, number, query, sort);
+        return await processParametersAndSendRequest(BASE_URL, 'listProducts', start, number, query, sort);
     };
 
     this.listBatches = async (start, number, query, sort) => {
-        await processParametersAndSendRequest(BASE_URL, 'listBatches', start, number, query, sort);
+        return await processParametersAndSendRequest(BASE_URL, 'listBatches', start, number, query, sort);
     };
 }
 
