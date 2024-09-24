@@ -130,6 +130,9 @@ function testMinimalConfiguration(){
     for(let batchNumber in targetLeaflets){
         let target = targetLeaflets[batchNumber];
         let {productCode, langs} = target;
+        if(config.frontend.url.endsWith("/")){
+            config.frontend.url = config.frontend.url.replace(/.$/,"");
+        }
         for(let lang of langs){
             let url = `${config.frontend.url}/leaflets/${config.common.domain}?gtin=${productCode}&lang=${lang}&leaflet_type=leaflet&batch=${batchNumber}`;
             await runRequest(requestCounter, url);

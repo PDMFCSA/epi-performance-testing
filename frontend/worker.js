@@ -22,7 +22,8 @@ function collectMetrics(requestUrl) {
             sizeTransferredKB: 0,
             timeToFirstByte: null,
             dataTransferTime: null,
-            totalTime: null
+            totalTime: null,
+            httpStatusCode: null
         };
 
         const start = process.hrtime();
@@ -37,6 +38,7 @@ function collectMetrics(requestUrl) {
             });
 
             res.on('end', () => {
+                requestMetrics.httpStatusCode = res.statusCode;
                 const totalTime = process.hrtime(start);
                 requestMetrics.totalTime = totalTime[0] * 1000 + totalTime[1] / 1e6; // Convert to ms
                 requestMetrics.dataTransferTime = requestMetrics.totalTime - requestMetrics.timeToFirstByte; // Data transfer time
