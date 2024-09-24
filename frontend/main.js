@@ -21,7 +21,7 @@ function runRequest(i, url) {
             resolve();
         });
 
-        subprocess.send({ id: i + 1, token }); // Send an id to the worker process
+        subprocess.send({ id: i + 1}); // Send an id to the worker process
     });
 }
 
@@ -46,6 +46,8 @@ process.on("uncaughtException", (err) => {
             return true;
         });
     }
+
+    let url = config.common.mahUrl;
 
     for (let i = 0; i < totalRequests; i++) {
         await runRequest(i, url);
