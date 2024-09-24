@@ -1,5 +1,6 @@
 function SoRClient(domain, subdomain, token) {
-    const BASE_URL = require("../config.json").common.mahUrl;
+    const mahUrl = require("../config.json").common.mahUrl;
+    const BASE_URL = `${mahUrl}/integration`;
     const _sendRequest = async (endpoint, method, data, responseType) => {
         if (!responseType) {
             responseType = "json";
