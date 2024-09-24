@@ -18,12 +18,11 @@ function collectMetrics(requestUrl) {
             dnsLookupTime: null,
             tcpHandshakeTime: null,
             sslHandshakeTime: isHttps ? null : 'N/A',
+            webServerTime: null, // Web server processing time (Time to first byte - connection times)
+            sizeTransferredKB: 0,
             timeToFirstByte: null,
             dataTransferTime: null,
-            totalTime: null,
-            sizeTransferredKB: 0,
-            sizeContentKB: 0,
-            webServerTime: null, // Web server processing time (Time to first byte - connection times)
+            totalTime: null
         };
 
         const start = process.hrtime();
@@ -42,7 +41,6 @@ function collectMetrics(requestUrl) {
                 requestMetrics.totalTime = totalTime[0] * 1000 + totalTime[1] / 1e6; // Convert to ms
                 requestMetrics.dataTransferTime = requestMetrics.totalTime - requestMetrics.timeToFirstByte; // Data transfer time
                 requestMetrics.sizeTransferredKB = bytesToKB(totalDataSize);
-                requestMetrics.sizeContentKB = bytesToKB(parseInt(res.headers['content-length'] || 0));
 
                 // Web server time is how long it took the server to start sending a response after the connection
                 requestMetrics.webServerTime = requestMetrics.timeToFirstByte - (requestMetrics.tcpHandshakeTime + (isHttps ? requestMetrics.sslHandshakeTime : 0));
