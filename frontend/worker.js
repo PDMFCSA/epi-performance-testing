@@ -7,7 +7,7 @@ const bytesToKB = (bytes) => (bytes / 1024).toFixed(2);
 
 // Send a GET request and collect metrics
 
-function collectMetrics(requestUrl) {
+function collectMetrics(requestUrl, id) {
     return new Promise((resolve, reject) => {
         const parsedUrl = url.parse(requestUrl);
         const isHttps = parsedUrl.protocol === 'https:';
@@ -28,6 +28,8 @@ function collectMetrics(requestUrl) {
 
         const start = process.hrtime();
         let totalDataSize = 0;
+
+        console.log(`Making the request for ${requestUrl}`);
 
         const req = httpLib.get(requestUrl, (res) => {
             const responseStart = process.hrtime(start);
@@ -60,13 +62,16 @@ function collectMetrics(requestUrl) {
 
             // TCP handshake time
             socket.on('connect', () => {
+
                 const tcpHandshakeTime = process.hrtime(start);
+                //console.log('Connected', id);
                 requestMetrics.tcpHandshakeTime = tcpHandshakeTime[0] * 1000 + tcpHandshakeTime[1] / 1e6; // Convert to ms
             });
 
             // SSL handshake time (only for HTTPS)
             if (isHttps) {
                 socket.on('secureConnect', () => {
+                    //console.log('secureConnect', id);
                     const sslHandshakeTime = process.hrtime(start);
                     requestMetrics.sslHandshakeTime = sslHandshakeTime[0] * 1000 + sslHandshakeTime[1] / 1e6; // Convert to ms
                 });
@@ -83,7 +88,7 @@ process.on('message', async (message) => {
     const requestUrl = message.url; // Change to the target URL
 
     try {
-        const metrics = await collectMetrics(requestUrl);
+        const metrics = await collectMetrics(requestUrl, message.id);
         metrics.id = message.id; // Include the request id
         process.send(metrics); // Send the metrics back to the parent process
     } catch (error) {
