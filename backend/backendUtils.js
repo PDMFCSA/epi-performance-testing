@@ -63,7 +63,7 @@ const convertLeafletFolderToObject = (folderPath) => {
             leafletObject.payload.xmlFileContent = fileData.toString('base64');
         } else {
             leafletObject.payload.otherFilesContent.push({
-                "fileName": file,
+                "filename": file,
                 "fileContent": fileData.toString('base64')
             });
         }
