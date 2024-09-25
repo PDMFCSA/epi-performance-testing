@@ -13,6 +13,9 @@ function SoRClient(domain, subdomain, token) {
         endpoint += `domain=${encodeURIComponent(domain)}&subdomain=${encodeURIComponent(subdomain)}`;
 
         if (method === 'GET') {
+            //https://internal-mah1.dev.pladevs.com/integration/listBatches?query=__timestamp%20%3E%200&start=0&number=1000&sort=desc&domain=dev.epi&subdomain=dev.epi.mah1
+
+            //https://internal-mah1.dev.pladevs.com/integration/listBatches?query=__timestamp%20%3E%200&start=0&number=16&sort=desc&domain=dev.epi&subdomain=dev.epi.mah1
             let response = await fetch(endpoint, {method, headers: {Authorization: `Bearer ${token}`}});
             if (response.status >= 400) {
                 let reason = await response.text();
@@ -119,7 +122,7 @@ function SoRClient(domain, subdomain, token) {
 
     const processParametersAndSendRequest = async (baseURL, endpoint, start, number, query, sort) => {
         if (!query) {
-            query = "__timestamp > 0";
+            query = encodeURIComponent("__timestamp > 0");
         }
         let url = `${baseURL}/${endpoint}?query=${encodeURIComponent(query)}`;
         if (typeof start !== 'undefined') {

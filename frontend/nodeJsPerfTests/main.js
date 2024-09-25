@@ -1,8 +1,9 @@
 const { fork } = require('child_process');
 const path = require('path');
-const utils = require("./../utils.js");
-const config = require("./../config.json");
-const SORClient = require("../backend/SoRClient.js");
+const utils = require("./../../utils.js");
+const RESULTS_DIR = "../../results/frontend/";
+const config = require("./../../config.json");
+const SORClient = require("../../backend/SoRClient.js");
 const fs = require('fs');
 const fsPromises = fs.promises;
 
@@ -25,7 +26,7 @@ function runRequest(i, url) {
             resolve();
         });
 
-        subprocess.send({ id: i + 1, url }); // Send an id to the worker process
+        subprocess.send({ id: i, url }); // Send an id to the worker process
     });
 }
 
@@ -55,6 +56,7 @@ async function executeContinuousRequests(urls) {
     while (activeWorkers > 0) {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
+
     const endOfTest = process.hrtime(startOfTest);
     console.log(`All requests finished. [${endOfTest} seconds]`);
 }
@@ -69,6 +71,7 @@ async function printResults() {
     console.log("Preparing to save the collected results...");
     let csv = "";
     let columns;
+    results.sort((a, b) => a.id - b.id);
     for (let result of results) {
         if (!columns) {
             columns = [];
@@ -85,8 +88,8 @@ async function printResults() {
     }
 
     let resultFileName = `Result_${Date.now()}.csv`;
-    await fsPromises.mkdir("../results/frontend/", { recursive: true });
-    await fsPromises.writeFile("../results/frontend/" + resultFileName, csv, "utf8");
+    await fsPromises.mkdir(RESULTS_DIR, { recursive: true });
+    await fsPromises.writeFile(RESULTS_DIR + resultFileName, csv, "utf8");
     console.log(`Finished to save the collected results into file ${resultFileName}`);
 }
 
@@ -125,61 +128,11 @@ function testMinimalConfiguration() {
 
     console.log(`Collecting info about the targeted system ${config.common.mahUrl}`);
     const start = process.hrtime();
-    let batches;
-    try {
-        console.log(`Collecting info about available batches...`);
-        batches = await client.listBatches(0, 1000, '__timestamp > 0', "desc");
-        console.log(`Found a number of ${batches.length} existing batches.`);
-    } catch (e) {
-        console.log(e);
-    }
 
-    let targetLeaflets = {};
-    let leafletCounter = 0;
-    let processedBatches = 0;
+    await utils.availableLeafletRetrieval(client);
 
-    if (batches) {
-        console.log(`Collecting info about available leaflets...`);
-        for (let batch of batches) {
-            let { productCode, batchNumber } = batch;
-            let langs = [];
-            try {
-                langs = await client.listProductLangs(productCode, "leaflet");
-            } catch (e) {
-                console.log(`Failed to read product [${productCode}] for available leaflet languages.`, e);
-            }
-
-            let batchLangs = [];
-            try {
-                batchLangs = await client.listBatchLangs(productCode, batchNumber, "leaflet");
-            } catch (e) {
-                console.log(`Failed to read batch [${batchNumber}, ${productCode}] for available leaflet languages`, e);
-            }
-
-            let availableLangs = [...new Set([...langs, ...batchLangs])];
-
-            if (availableLangs.length > 0) {
-                targetLeaflets[batchNumber] = { productCode, langs: availableLangs };
-                leafletCounter += availableLangs.length;
-                console.log(`Found ${availableLangs.length} more leaflet(s)...`);
-            }
-            processedBatches++;
-            console.log(`Processed ${processedBatches} batch(es) so far...`);
-
-            if (config.frontend.requestsMinimalTarget) {
-                if (leafletCounter >= config.frontend.requestsMinimalTarget) {
-                    console.log(`Achieved requestsMinimalTarget (>= ${config.frontend.requestsMinimalTarget}).`);
-                    break;
-                }
-            } else {
-                console.log(`requestsMinimalTarget config was not set.`);
-                console.log(`Continuing to search for leaflets until we finish all the batches.`);
-                console.log(`Remaining ${batches.length - processedBatches} batch(es) to be processed...`);
-            }
-        }
-        const totalTime = process.hrtime(start);
-        console.log(`Found a total of ${leafletCounter} leaflets in ${totalTime[0]} seconds.`);
-    }
+    const totalTime = process.hrtime(start);
+    console.log(`Found a total of ${leafletCounter} leaflets in ${totalTime[0]} seconds.`);
 
     let urls = [];
     for (let batchNumber in targetLeaflets) {

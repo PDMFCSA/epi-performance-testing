@@ -1,0 +1,12 @@
+*.html
+**/bin/
+*.csv
+node_modules/
+tests/*.json
+tests/*.html
+
+# VS Code
+#.vscode/*
+*.code-workspace
+
+
