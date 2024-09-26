@@ -6,8 +6,13 @@
         "scope": "",
         "domain": "",
         "subdomain": "",
-        "mahUrl": ""
+        "mahUrl": "replace with the epi-runner url"
     },
     "backend": {},
-    "frontend": {}
+    "frontend": {
+        "url": "replace with the leaflet-reader url",
+        "vu": 1,
+        "requestsMinimalTarget": 10,
+        "cloudExecution": false
+    }
 }
