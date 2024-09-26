@@ -144,6 +144,10 @@ function SoRClient(domain, subdomain, token) {
     this.listBatches = async (start, number, query, sort) => {
         return await processParametersAndSendRequest(BASE_URL, 'listBatches', start, number, query, sort);
     };
+
+    this.getFixedURLStatus = async () => {
+        return await _sendRequest(`${mahUrl}/statusFixedURL`, 'GET');
+    }
 }
 
 module.exports = SoRClient;
