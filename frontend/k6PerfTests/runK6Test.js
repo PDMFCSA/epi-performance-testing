@@ -40,10 +40,24 @@ process.on("uncaughtException", (err) => {
     await fsPromises.writeFile(filePath, JSON.stringify(jsonInputs, undefined, 4), "utf8");
     console.log(`Finished to save the collected results into file ${resultFileName}`);
 
-    const cmd = `k6 run -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_DATA='../../${filePath}' -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME='${config.frontend.url}' './k6-scripts/src/pla_getLeaflets.js'`
+    let cmd = `k6 ${config.frontend.cloudExecution ? "cloud" : "run"} -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_ALL=1 -e PLA_DATA='../../${filePath}' -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME='${config.frontend.url}' './k6-scripts/src/pla_getLeaflets.js'`
     console.log(`Preparing to execute the cmd: ${cmd}`);
+    console.log(`This will ensure that ALL urls will be hit during testing.`);
+    try{
+        execSync(cmd, { stdio: 'inherit'});
+    }catch(err){
+        console.log(err);
+    }
 
-    execSync(cmd, { stdio: 'inherit'});
+    cmd = `k6 ${config.frontend.cloudExecution ? "cloud" : "run"} -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_DATA='../../${filePath}' -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME='${config.frontend.url}' './k6-scripts/src/pla_getLeaflets.js'`
+    console.log(`Preparing to execute the cmd: ${cmd}`);
+    console.log(`This will ensure that ONE random url from data set will be picked and used during testing.`);
+    try{
+        execSync(cmd, { stdio: 'inherit'});
+    }catch(err){
+        console.log(err);
+    }
+
 
     process.exit(0);
 })();

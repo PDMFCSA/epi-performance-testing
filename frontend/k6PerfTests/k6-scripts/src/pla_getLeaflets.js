@@ -48,23 +48,40 @@ export const options = {
   scenarios: {
     gtinOwner: {
       executor: 'ramping-vus',
-      gracefulStop: '10s',
+      gracefulStop: '30s',
       stages: [
-        { target: 20, duration: '10s' },
-        { target: 50, duration: '30s' },
-        { target: 0, duration: '30s' },
+        {target: 20, duration: '1m'},
+        {target: 50, duration: '3m'},
+        {target: 0, duration: '3m'},
       ],
       gracefulRampDown: '30s',
       exec: 'gtinOwner',
-      tags: { test_type: 'api' }, // tag for later definitions
-    }
+      tags: {test_type: 'api'}, // tag for later definitions
+    },
+    getLeaflet: {
+      startTime: '7m', // adapt to run gtinOwner and getLeaflet sequentially or in parallel. Now the getLeaflet will start after gtinOwner finishes approx. 7m.
+      executor: 'ramping-vus',
+      gracefulStop: '30s',
+      stages: [
+        {target: 20, duration: '1m'},
+        {target: 50, duration: '3m'},
+        {target: 0, duration: '3m'},
+      ],
+      gracefulRampDown: '30s',
+      exec: 'getLeaflet',
+      tags: {test_type: 'api'}, // tag for later definitions
+    },
   },
-  thresholds: { 'http_req_duration{test_type:api}': ['p(95)<2000', 'p(99)<3000'] },
+  thresholds: { 'http_req_duration{test_type:api}': ['p(95)<2000', 'p(99)<3000'] }
 }
 
 export function getLeaflet(params) {
   //select random parameters set
-  const itemNum = __ENV.PLA_RANDOM == 1 ? Math.floor(Math.random() * data.length) : 0
+  let itemNum = __ENV.PLA_RANDOM == 1 ? Math.floor(Math.random() * data.length) : 0
+  //setting PLA_ALL will ensure that all url's from data set will be used during test
+  if(__ENV.PLA_ALL == 1){
+    itemNum = __ITER % data.length;  // This ensures we cycle through all URLs
+  }
   const randomParam = data[itemNum]
 
   const url = new URL(`${__ENV.PLA_HOSTNAME}/leaflets/${__ENV.PLA_BDNS}`)
@@ -93,7 +110,11 @@ export function getLeaflet(params) {
 
 export function gtinOwner(params) {
   //select random parameters set
-  const itemNum = __ENV.PLA_RANDOM == 1 ? Math.floor(Math.random() * data.length) : 0
+  let itemNum = __ENV.PLA_RANDOM == 1 ? Math.floor(Math.random() * data.length) : 0
+  //setting PLA_ALL will ensure that all url's from data set will be used during test
+  if(__ENV.PLA_ALL == 1){
+    itemNum = __ITER % data.length;  // This ensures we cycle through all URLs
+  }
   const randomParam = data[itemNum]
 
   const url = new URL(`${__ENV.PLA_HOSTNAME}/gtinOwner/${__ENV.PLA_BDNS}/${randomParam.gtin}`)
