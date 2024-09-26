@@ -31,7 +31,7 @@ if (typeof __ENV.PLA_HEADER_KEY !== 'undefined' || typeof __ENV.PLA_HEADER_VAL !
 export function handleSummary(data) {
   const actDate = new Date().toISOString()
   const reportTitle = 'Get Leaflet executed on: '.concat(actDate)
-  const filename = '../reports/result_'
+  let filename = './k6-scripts/reports/result_'
     .concat(actDate.replace(/[^0-9]/g, ''))
     .concat('.html')
     .toString()
@@ -48,29 +48,16 @@ export const options = {
   scenarios: {
     gtinOwner: {
       executor: 'ramping-vus',
-      gracefulStop: '30s',
+      gracefulStop: '10s',
       stages: [
-        { target: 20, duration: '1m' },
-        { target: 50, duration: '3m' },
-        { target: 0, duration: '3m' },
+        { target: 20, duration: '10s' },
+        { target: 50, duration: '30s' },
+        { target: 0, duration: '30s' },
       ],
       gracefulRampDown: '30s',
       exec: 'gtinOwner',
       tags: { test_type: 'api' }, // tag for later definitions
-    },
-    getLeaflet: {
-      startTime: '7m', // adapt to run sequentially or in parallel
-      executor: 'ramping-vus',
-      gracefulStop: '30s',
-      stages: [
-        { target: 20, duration: '1m' },
-        { target: 50, duration: '3m' },
-        { target: 0, duration: '3m' },
-      ],
-      gracefulRampDown: '30s',
-      exec: 'getLeaflet',
-      tags: { test_type: 'api' }, // tag for later definitions
-    },
+    }
   },
   thresholds: { 'http_req_duration{test_type:api}': ['p(95)<2000', 'p(99)<3000'] },
 }
