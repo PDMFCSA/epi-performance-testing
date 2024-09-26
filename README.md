@@ -9,7 +9,7 @@ This repository contains performance testing scripts and configuration for the P
 The repository is structured as follows:
 
 - backend/: Contains server-side scripts related to API performance testing.
-- frontend/: Contains client-side related testing scripts, targeting main APIs used by the LWA application. Some scripts use k6 test tool and it's cloud feature in order to create requests from specific geographic locations.
+- frontend/: Contains client-side testing scripts targeting the main APIs used by the LWA application. Some scripts use the K6 testing tool and its cloud feature to generate requests from specific geographic locations.
 - config.json: The main configuration file that specifies the test environment variables such as API endpoints, load profiles, and test data.
 
 ### Scripts
