@@ -12,12 +12,12 @@ function generateRandomGTIN14() {
 
 
     let j = gtinMultiplicationArray.length - 1;
-    let reszultSum = 0;
+    let resultSum = 0;
     for (let i = gtinDigits.length - 1; i >= 0; i--) {
-        reszultSum = reszultSum + gtinDigits[i] * gtinMultiplicationArray[j];
+        resultSum = resultSum + gtinDigits[i] * gtinMultiplicationArray[j];
         j--;
     }
-    let validDigit = Math.floor((reszultSum + 10) / 10) * 10 - reszultSum;
+    let validDigit = Math.floor((resultSum + 10) / 10) * 10 - resultSum;
     if (validDigit === 10) {
         validDigit = 0;
     }
