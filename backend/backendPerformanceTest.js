@@ -115,13 +115,14 @@ const addProducts = async () => {
             await updateProduct(gtin, client);
             await updateProductEPI(gtin, 'en', leaflet, client);
             await updateProductEPI(gtin, 'fr', leaflet, client);
+            await updateBatch(gtin, generateRandomBatchNumber(), client);
             completedRequests++;
             console.log(`Completed request for product with GTIN: ${gtin}. Total completed: ${completedRequests}`);
         } catch (error) {
             if (error.code === 401) {
                 accessToken = await getAccessToken();
                 client = new Client(domain, subdomain, accessToken);
-            } else {
+            } else if(error.code !== 429){
                 console.log(error);
                 console.error(`Error processing product with GTIN: ${gtin}. Retrying...`);
                 errors++;
@@ -137,6 +138,7 @@ const addProducts = async () => {
                 await updateProduct(gtin, client);
                 await updateProductEPI(gtin, 'en', leaflet, client);
                 await updateProductEPI(gtin, 'fr', leaflet, client);
+                await updateBatch(gtin, generateRandomBatchNumber(), client);
                 completedRequests++;
                 console.log(`Retry successful for GTIN: ${gtin}`);
                 return;
