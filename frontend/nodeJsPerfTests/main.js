@@ -129,7 +129,7 @@ function testMinimalConfiguration() {
     console.log(`Collecting info about the targeted system ${config.common.mahUrl}`);
     const start = process.hrtime();
 
-    await utils.availableLeafletRetrieval(client);
+    const {targetLeaflets, leafletCounter} = await utils.availableLeafletRetrieval(client);
 
     const totalTime = process.hrtime(start);
     console.log(`Found a total of ${leafletCounter} leaflets in ${totalTime[0]} seconds.`);
