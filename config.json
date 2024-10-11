@@ -13,6 +13,7 @@
         "url": "replace with the leaflet-reader url",
         "vu": 1,
         "requestsMinimalTarget": 10,
-        "cloudExecution": false
+        "cloudExecution": false,
+        "loadZone": "amazon:au:sydney"
     }
 }
