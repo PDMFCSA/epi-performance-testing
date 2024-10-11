@@ -41,6 +41,10 @@ process.on("uncaughtException", (err) => {
     console.log(`Finished to save the collected results into file ${resultFileName}`);
 
     let cmd = `k6 ${config.frontend.cloudExecution ? "cloud" : "run"} -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_ALL=1 -e PLA_DATA='../../${filePath}' -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME='${config.frontend.url}' 'k6-scripts/src/pla_getLeaflets.js'`
+    if(path.sep !== "/"){
+        cmd = cmd.replaceAll("/", path.sep);
+    }
+
     console.log(`Preparing to execute the cmd: ${cmd}`);
     console.log(`This will ensure that ALL urls will be hit during testing.`);
     try{
@@ -50,6 +54,11 @@ process.on("uncaughtException", (err) => {
     }
 
     cmd = `k6 ${config.frontend.cloudExecution ? "cloud" : "run"} -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_DATA='../../${filePath}' -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME='${config.frontend.url}' 'k6-scripts/src/pla_getLeaflets.js'`
+
+    if(path.sep !== "/"){
+        cmd = cmd.replaceAll("/", path.sep);
+    }
+
     console.log(`Preparing to execute the cmd: ${cmd}`);
     console.log(`This will ensure that ONE random url from data set will be picked and used during testing.`);
     try{
