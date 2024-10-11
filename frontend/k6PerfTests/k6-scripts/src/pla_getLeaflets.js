@@ -45,27 +45,34 @@ export function handleSummary(data) {
 export const requests = new Counter('http_reqs')
 
 export const options = {
+  ext: {
+    loadimpact: {
+      distribution: {
+        distributionLabel2: { loadZone: __ENV.LOAD_ZONE || 'amazon:au:sydney', percent: 100 },
+      },
+    },
+  },
   scenarios: {
     gtinOwner: {
       executor: 'ramping-vus',
       gracefulStop: '30s',
       stages: [
-        {target: 20, duration: '1m'},
-        {target: 50, duration: '3m'},
-        {target: 0, duration: '3m'},
+        {target: 10, duration: '1m'},
+        {target: 20, duration: '2m'},
+        {target: 0, duration: '2m'},
       ],
       gracefulRampDown: '30s',
       exec: 'gtinOwner',
       tags: {test_type: 'api'}, // tag for later definitions
     },
     getLeaflet: {
-      startTime: '7m', // adapt to run gtinOwner and getLeaflet sequentially or in parallel. Now the getLeaflet will start after gtinOwner finishes approx. 7m.
+      startTime: '5m', // adapt to run gtinOwner and getLeaflet sequentially or in parallel. Now the getLeaflet will start after gtinOwner finishes approx. 7m.
       executor: 'ramping-vus',
       gracefulStop: '30s',
       stages: [
-        {target: 20, duration: '1m'},
-        {target: 50, duration: '3m'},
-        {target: 0, duration: '3m'},
+        {target: 10, duration: '1m'},
+        {target: 20, duration: '2m'},
+        {target: 0, duration: '2m'},
       ],
       gracefulRampDown: '30s',
       exec: 'getLeaflet',
