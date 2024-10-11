@@ -40,3 +40,10 @@ The primary scripts for executing performance tests include the following:
 
 5. At the end check the terminal where the script was executed and identify the report file path.
 
+### Running K6 
+1. Update the config.json file entry "cloudExecution" from false to true.
+2. If needed, select the proper load zone from the following link: https://k6.io/docs/cloud/creating-and-running-a-test/cloud-scripting-extras/load-zones/ and update the config.json "loadZone" property.
+3. Execute the ``` k6 login cloud --token {replacewithyourtoken} ``` cmd in order to login into k6 cloud.
+4. Run the test ``` cd frontend/k6PerfTests/ && node runK6Test.js ```
+5. At the end check the k6 cloud dashboard for the results.
+
