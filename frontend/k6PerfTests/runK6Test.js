@@ -42,7 +42,7 @@ process.on("uncaughtException", (err) => {
 
     let cmd = `k6 ${config.frontend.cloudExecution ? "cloud" : "run"} -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_ALL=1 -e PLA_DATA="../../${filePath}" -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME="${config.frontend.url}" "./k6-scripts/src/pla_getLeaflets.js"`
     if(config.frontend.cloudExecution){
-        cmd += ` -e LOAD_ZONE=${config.frontend.loadZone}`;
+        cmd += ` -e LOAD_ZONE="${config.frontend.loadZone}"`;
     }
 
     if(path.sep !== "/"){
@@ -59,7 +59,7 @@ process.on("uncaughtException", (err) => {
 
     cmd = `k6 ${config.frontend.cloudExecution ? "cloud" : "run"} -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_DATA="../../${filePath}" -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME="${config.frontend.url}" "./k6-scripts/src/pla_getLeaflets.js"`
     if(config.frontend.cloudExecution){
-        cmd += ` -e LOAD_ZONE=${config.frontend.loadZone}`;
+        cmd += ` -e LOAD_ZONE="${config.frontend.loadZone}"`;
     }
 
     if(path.sep !== "/"){
