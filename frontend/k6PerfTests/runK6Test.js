@@ -40,7 +40,7 @@ process.on("uncaughtException", (err) => {
     await fsPromises.writeFile(filePath, JSON.stringify(jsonInputs, undefined, 4), "utf8");
     console.log(`Finished to save the collected results into file ${resultFileName}`);
 
-    let cmd = `k6 ${config.frontend.cloudExecution ? "cloud" : "run"} -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_ALL=1 -e PLA_DATA='../../${filePath}' -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME='${config.frontend.url}' './k6-scripts/src/pla_getLeaflets.js'`
+    let cmd = `k6 ${config.frontend.cloudExecution ? "cloud" : "run"} -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_ALL=1 -e PLA_DATA="../../${filePath}" -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME="${config.frontend.url}" "./k6-scripts/src/pla_getLeaflets.js"`
     if(path.sep !== "/"){
         cmd = cmd.replaceAll("/", path.sep);
     }
@@ -53,7 +53,7 @@ process.on("uncaughtException", (err) => {
         console.log(err);
     }
 
-    cmd = `k6 ${config.frontend.cloudExecution ? "cloud" : "run"} -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_DATA='../../${filePath}' -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME='${config.frontend.url}' './k6-scripts/src/pla_getLeaflets.js'`
+    cmd = `k6 ${config.frontend.cloudExecution ? "cloud" : "run"} -e RANDOM=1 -e PLA_DEBUG=1 -e PLA_DATA="../../${filePath}" -e PLA_BDNS=${config.common.domain} -e PLA_HOSTNAME="${config.frontend.url}" "./k6-scripts/src/pla_getLeaflets.js"`
 
     if(path.sep !== "/"){
         cmd = cmd.replaceAll("/", path.sep);
