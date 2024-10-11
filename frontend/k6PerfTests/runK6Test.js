@@ -48,7 +48,7 @@ process.on("uncaughtException", (err) => {
     console.log(`Preparing to execute the cmd: ${cmd}`);
     console.log(`This will ensure that ALL urls will be hit during testing.`);
     try{
-        execSync(cmd, { stdio: 'inherit'});
+        execSync(cmd, { stdio: 'inherit', cwd: process.cwd()});
     }catch(err){
         console.log(err);
     }
@@ -62,7 +62,7 @@ process.on("uncaughtException", (err) => {
     console.log(`Preparing to execute the cmd: ${cmd}`);
     console.log(`This will ensure that ONE random url from data set will be picked and used during testing.`);
     try{
-        execSync(cmd, { stdio: 'inherit'});
+        execSync(cmd, { stdio: 'inherit', cwd: process.cwd()});
     }catch(err){
         console.log(err);
     }
