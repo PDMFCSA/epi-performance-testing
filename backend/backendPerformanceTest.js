@@ -72,8 +72,14 @@ const PATH_TO_LEAFLET_FOLDER = "./leaflets/productC";
 const TIME_BETWEEN_REQUESTS = 60000; // 1 second
 const TIME_BETWEEN_READINESS_CHECKS = 5000;
 const NO_REQUESTS_BEFORE_SLEEPING = 100;
+// create results folder
+const RESULTS_DIR = "./results/";
+if (!fs.existsSync(RESULTS_DIR)) {
+    fs.mkdirSync(RESULTS_DIR);
+}
+
 // Path to the CSV file
-const CSV_FILE_PATH = path.join(__dirname, 'processing_times.csv');
+const CSV_FILE_PATH = path.join(RESULTS_DIR, `results_${NO_PRODUCTS}_products_${NO_PARALLEL_REQUESTS}_parallel_requests_${Date.now()}.csv`);
 
 // Function to write CSV headers if the file does not exist
 const writeCSVHeaders = () => {
