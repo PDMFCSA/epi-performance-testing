@@ -14,7 +14,7 @@ const productDetails = {
         "productCode": "",
         "internalMaterialCode": "",
         "inventedName": "BOUNTY",
-        "nameMedicinalProduct": "BOUNTY® 250 mg / 0.68 mL pre-filled syringe",
+        "nameMedicinalProduct": "Product",
         "strength": ""
     }
 };
