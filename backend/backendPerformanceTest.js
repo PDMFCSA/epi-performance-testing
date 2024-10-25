@@ -79,7 +79,10 @@ if (!fs.existsSync(RESULTS_DIR)) {
 }
 
 // Path to the CSV file
-const CSV_FILE_PATH = path.join(RESULTS_DIR, `results_${NO_PRODUCTS}_products_${NO_PARALLEL_REQUESTS}_parallel_requests_${Date.now()}.csv`);
+const timestamp = Date.now();
+const CSV_FILE_PATH = path.join(RESULTS_DIR, `results_${NO_PRODUCTS}_products_${NO_PARALLEL_REQUESTS}_parallel_requests_${timestamp}.csv`);
+// Path to the error log file
+const ERROR_LOG_FILE_PATH = path.join(RESULTS_DIR, `error_${NO_PRODUCTS}_products_${NO_PARALLEL_REQUESTS}_parallel_requests_${timestamp}.log`);
 
 // Function to write CSV headers if the file does not exist
 const writeCSVHeaders = () => {
@@ -130,6 +133,8 @@ const addProducts = async () => {
                 client = new Client(domain, subdomain, accessToken);
             } else if(error.code !== 429){
                 console.log(error);
+                // write error to an error log file
+                fs.appendFileSync(ERROR_LOG_FILE_PATH, `Error processing product with GTIN: ${gtin}. Error: ${error.message}\n`);
                 console.error(`Error processing product with GTIN: ${gtin}. Retrying...`);
                 errors++;
             }
