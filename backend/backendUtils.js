@@ -45,7 +45,7 @@ const convertLeafletFolderToObject = (folderPath) => {
         "messageDateTime": "2022-06-29T09:40:15.583Z",
         "messageType": "leaflet",
         "payload": {
-            "status": "new",
+            // "status": "new",
             "language": "en",
             "xmlFileContent": "",
             "otherFilesContent": []

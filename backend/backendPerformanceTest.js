@@ -15,7 +15,7 @@ const productDetails = {
         "internalMaterialCode": "",
         "inventedName": "BOUNTY",
         "nameMedicinalProduct": "Product",
-        "strength": ""
+        // "strength": ""
     }
 };
 
